@@ -1,11 +1,16 @@
 package controllers
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
+
 import javax.inject._
 import play.api.mvc._
 import play.api.Configuration
 import play.api.libs.json._
 import scalaj.http.Http
 import models.PRDetails
+
 import scala.collection.mutable.ArrayBuffer
 
 /**
@@ -56,16 +61,24 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
               (pr \ "title").as[String],
               (pr \ "html_url").as[String],
               (pr \ "created_at").as[String],
-              (pr \ "updated_at").as[String]
+              getDaysSince((pr \ "created_at").as[String]),
+              (pr \ "updated_at").as[String],
+              getDaysSince((pr \ "updated_at").as[String])
             )
           }
         }
 
       }
-
     }
-
     Ok(views.html.index(arrayBuffer))
+  }
+
+  def getDaysSince(date: String): Long = {
+    //2018-03-15T09:43:30Z
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    val convertedDate = LocalDate.parse(date, formatter)
+    val dateNow = LocalDate.now()
+    dateNow.toEpochDay - convertedDate.toEpochDay
   }
 
 }
