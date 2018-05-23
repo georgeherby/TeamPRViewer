@@ -31,9 +31,6 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
     val request = Http(s"https://api.github.com/teams/${config.get[Int]("github.team_id")}/repos?per_page=1000")
       .header("Accept", "application/vnd.github.hellcat-preview+json")
       .header("Authorization", s"token ${config.get[String]("github.accesstoken")}").asString
-    //println(request.headers)
-
-    //println(request.body)
 
     val req = request.body
 
