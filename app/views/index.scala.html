@@ -1,0 +1,23 @@
+@import scala.collection.mutable.ArrayBuffer
+
+@(listOfPRs: ArrayBuffer[PRDetails])
+<table>
+ <tr>
+  <th>Repository</th>
+  <th>PR Title</th>
+  <th>Created Date</th>
+  <th>Last Update</th>
+  <th>Link</th>
+ </tr>
+ @for(pr <- listOfPRs){
+   <tr>
+    <td>@pr.repo</td>
+    <td>@pr.title</td>
+    <td>@pr.createdDate</td>
+    <td>@pr.lastUpdatedDate</td>
+    <td><a href="@pr.url">Open PR</a></td>
+   </tr>
+ }
+
+</table>
+
