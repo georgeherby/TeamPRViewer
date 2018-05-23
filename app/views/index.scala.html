@@ -13,17 +13,22 @@
    <tr>
     <td>@pr.repo</td>
     <td>@pr.title</td>
-    @if(pr.daysSinceCreate > 5){
+    @if(pr.daysSinceCreate >= 5){
      <td bgcolor="#ff0000">
+     }else if(pr.daysSinceCreate < 5 && pr.daysSinceCreate > 2) {
+    <td bgcolor="#ffa500">
     }else{
-     <td>
+   <td>
     }
     @pr.createdDate</td>
-    @if(pr.daysSincelastUpdatedDate > 5){
+    @if(pr.daysSincelastUpdatedDate >= 10){
      <td bgcolor="#ff0000">
+    }else if(pr.daysSincelastUpdatedDate < 10 && pr.daysSincelastUpdatedDate > 4) {
+     <td bgcolor="#ffa500">
     }else{
-     <td>
-     }@pr.lastUpdatedDate</td>
+      <td>
+    }
+    @pr.lastUpdatedDate</td>
     <td><a href="@pr.url">Open PR</a></td>
    </tr>
  }
