@@ -36,9 +36,8 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
 
     val jsn = Json.parse(req)
 
-    val size = jsn.as[JsArray].value.size
+    val noOfArrays = jsn.as[JsArray].value.size
 
-    println(s"Number of Repos $size")
     val arrayBuffer = ArrayBuffer[PRDetails]()
 
     for (item <- jsn.as[JsArray].value){
@@ -57,21 +56,26 @@ class HomeController @Inject()(config: Configuration, cc: ControllerComponents) 
               repoName,
               (pr \ "title").as[String],
               (pr \ "html_url").as[String],
-              (pr \ "created_at").as[String],
+              getCleanDate((pr \ "created_at").as[String]),
               getDaysSince((pr \ "created_at").as[String]),
-              (pr \ "updated_at").as[String],
+              getCleanDate((pr \ "updated_at").as[String]),
               getDaysSince((pr \ "updated_at").as[String])
             )
           }
         }
-
       }
     }
-    Ok(views.html.index(arrayBuffer))
+    Ok(views.html.index(noOfArrays,arrayBuffer.sortWith(_.repo < _.repo)))
+  }
+
+  def getCleanDate(date: String): String = {
+    val originalFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    val ouputFormat = DateTimeFormatter.ofPattern("dd MMM yyyy  HH:mm")
+
+    ouputFormat.format(originalFormat.parse(date))
   }
 
   def getDaysSince(date: String): Long = {
-    //2018-03-15T09:43:30Z
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
     val convertedDate = LocalDate.parse(date, formatter)
     val dateNow = LocalDate.now()

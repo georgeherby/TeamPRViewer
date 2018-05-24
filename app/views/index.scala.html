@@ -1,7 +1,9 @@
 @import scala.collection.mutable.ArrayBuffer
 
-@(listOfPRs: ArrayBuffer[PRDetails])
+@(numberOfRepos: Int, listOfPRs: ArrayBuffer[PRDetails])
 <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/main.css")">
+<h1 align="center">Team Kraken - Open PRs</h1>
+<h2 align="center">@listOfPRs.size PRs in @numberOfRepos Repositories</h2>
 <table>
  <tr>
   <th>Repository</th>
@@ -22,6 +24,11 @@
    <td>
     }
     @pr.createdDate</td>
+
+    @if(pr.createdDate == pr.lastUpdatedDate){
+      <td>-</td>
+    }else{
+
     @if(pr.daysSincelastUpdatedDate >= 10){
      <td bgcolor="#ff0000">
     }else if(pr.daysSincelastUpdatedDate < 10 && pr.daysSincelastUpdatedDate > 4) {
@@ -30,7 +37,8 @@
       <td>
     }
     @pr.lastUpdatedDate</td>
-    <td><a href="@pr.url">Open PR</a></td>
+    }
+    <td><a href="@pr.url">View PR</a></td>
    </tr>
  }
 
