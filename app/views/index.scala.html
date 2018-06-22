@@ -1,46 +1,52 @@
 @import scala.collection.mutable.ArrayBuffer
 
-@(numberOfRepos: Int, listOfPRs: ArrayBuffer[PRDetails])
-<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/main.css")">
-<h1 align="center">Team Kraken - Open PRs</h1>
-<h2 align="center">@listOfPRs.size PRs in @numberOfRepos Repositories</h2>
+@(team_name: String, numberOfRepos: Int, listOfPRs: ArrayBuffer[PRDetails], messages: Messages)
+<head>
+    <title>@messages("homepage.title", team_name)</title>
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/main.css")">
+</head>
+<h1 align="center">@messages("homepage.title", team_name)</h1>
+<h2 align="center">@listOfPRs.size PRs</h2>
 <table>
- <tr>
-  <th>Repository</th>
-  <th>PR Title</th>
-  <th>Created Date</th>
-  <th>Last Update</th>
-  <th>Link</th>
- </tr>
- @for(pr <- listOfPRs){
-   <tr>
-    <td>@pr.repo</td>
-    <td>@pr.title</td>
-    @if(pr.daysSinceCreate >= 5){
-     <td bgcolor="#ff0000">
-     }else if(pr.daysSinceCreate < 5 && pr.daysSinceCreate > 2) {
-    <td bgcolor="#ffa500">
-    }else{
-   <td>
-    }
-    @pr.createdDate</td>
+    <tr>
+        <th>Repository</th>
+        <th>PR Title</th>
+        <th>Created Date</th>
+        <th>Last Update</th>
+        <th>Link</th>
+    </tr>
+    @for(pr <- listOfPRs){
+        <tr>
+            <td>@pr.repo</td>
+            <td>@pr.title</td>
+            @if(pr.daysSinceCreate >= 5){
+                <td bgcolor="#ff0000">
+            }else {
+                @if(pr.daysSinceCreate < 5 && pr.daysSinceCreate > 2) {
+                    <td bgcolor="#ffa500">
+                } else{
+                    <td>
+                    }
+            }
+            @pr.createdDate</td>
 
-    @if(pr.createdDate == pr.lastUpdatedDate){
-      <td>-</td>
-    }else{
-
-    @if(pr.daysSincelastUpdatedDate >= 10){
-     <td bgcolor="#ff0000">
-    }else if(pr.daysSincelastUpdatedDate < 10 && pr.daysSincelastUpdatedDate > 4) {
-     <td bgcolor="#ffa500">
-    }else{
-      <td>
+            @if(pr.createdDate == pr.lastUpdatedDate){
+                <td>-</td>
+            }else{
+                @if(pr.daysSinceLastUpdatedDate >= 10){
+                    <td bgcolor="#ff0000">
+                }else {
+                    @if(pr.daysSinceLastUpdatedDate < 10 && pr.daysSinceLastUpdatedDate > 4) {
+                        <td bgcolor="#ffa500">
+                    }else{
+                        <td>
+                        }
+                }
+                @pr.lastUpdatedDate</td>
+            }
+            <td><a href="@pr.url">View PR</a></td>
+        </tr>
     }
-    @pr.lastUpdatedDate</td>
-    }
-    <td><a href="@pr.url">View PR</a></td>
-   </tr>
- }
 
 </table>
 
